@@ -213,47 +213,45 @@ function ProductCardInner({ product }: { product: Product }) {
       <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-cyan-500/0 via-transparent to-violet-500/0 group-hover:from-cyan-500/20 group-hover:to-violet-500/20 transition-all duration-500 blur-sm opacity-0 group-hover:opacity-100" />
 
       <div className="relative">
-        {/* Image */}
-        <Link to={`/product/${id}`} className="block relative overflow-hidden aspect-square bg-slate-900/50">
-          <img
-            src={image}
-            alt={name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            loading="lazy"
-            onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMAGE; }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        {/* Image Container */}
+        <div className="relative overflow-hidden aspect-square bg-slate-900/50">
+          <Link to={`/product/${id}`} className="block w-full h-full">
+            <img
+              src={image}
+              alt={name}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
+              onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMAGE; }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </Link>
 
           {badge && (
-            <span className="absolute top-3 left-3 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-lg">
+            <span className="absolute top-3 left-3 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-lg pointer-events-none">
               {badge}
             </span>
           )}
           {discount > 0 && (
-            <span className="absolute top-3 right-3 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-red-500/90 text-white">
+            <span className="absolute top-3 right-3 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-red-500/90 text-white pointer-events-none">
               -{discount}%
             </span>
           )}
 
-          {/* Wishlist Heart Button */}
+          {/* Wishlist Heart Button - Outside Link */}
           <motion.button
             whileHover={{ scale: 1.15 }}
             whileTap={{ scale: 0.9 }}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggleWishlist(id);
-            }}
-            className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 ${
+            onClick={() => toggleWishlist(id)}
+            className={`absolute w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 z-10 ${
               inWishlist 
                 ? 'bg-red-500/90 text-white shadow-lg shadow-red-500/30' 
                 : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white opacity-0 group-hover:opacity-100'
-            } ${discount > 0 ? 'top-12' : 'top-3'}`}
+            } ${discount > 0 ? 'top-12 right-3' : 'top-3 right-3'}`}
             aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
           >
             <Heart size={14} className={inWishlist ? 'fill-current' : ''} />
           </motion.button>
-        </Link>
+        </div>
 
         {/* Info */}
         <div className="p-4">

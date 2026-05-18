@@ -104,43 +104,41 @@ export default function Wishlist() {
                   <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-cyan-500/0 via-transparent to-violet-500/0 group-hover:from-cyan-500/20 group-hover:to-violet-500/20 transition-all duration-500 blur-sm opacity-0 group-hover:opacity-100" />
 
                   <div className="relative">
-                    {/* Image */}
-                    <Link to={`/product/${product.id}`} className="block relative overflow-hidden aspect-square bg-slate-900/50">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        loading="lazy"
-                        onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMAGE; }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {/* Image Container */}
+                    <div className="relative overflow-hidden aspect-square bg-slate-900/50">
+                      <Link to={`/product/${product.id}`} className="block w-full h-full">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          loading="lazy"
+                          onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMAGE; }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </Link>
 
                       {product.badge && (
-                        <span className="absolute top-3 left-3 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-lg">
+                        <span className="absolute top-3 left-3 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-lg pointer-events-none">
                           {product.badge}
                         </span>
                       )}
                       {discount > 0 && (
-                        <span className="absolute top-3 right-3 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-red-500/90 text-white">
+                        <span className="absolute top-3 right-3 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-red-500/90 text-white pointer-events-none">
                           -{discount}%
                         </span>
                       )}
 
-                      {/* Remove from wishlist button */}
+                      {/* Remove from wishlist button - Outside Link */}
                       <motion.button
                         whileHover={{ scale: 1.15 }}
                         whileTap={{ scale: 0.9 }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          removeFromWishlist(product.id);
-                        }}
-                        className={`absolute ${discount > 0 ? 'top-12' : 'top-3'} right-3 w-8 h-8 rounded-full flex items-center justify-center bg-red-500/90 text-white shadow-lg shadow-red-500/30 transition-all duration-300`}
+                        onClick={() => removeFromWishlist(product.id)}
+                        className={`absolute ${discount > 0 ? 'top-12' : 'top-3'} right-3 w-8 h-8 rounded-full flex items-center justify-center bg-red-500/90 text-white shadow-lg shadow-red-500/30 transition-all duration-300 z-10`}
                         aria-label="Remove from wishlist"
                       >
                         <Heart size={14} className="fill-current" />
                       </motion.button>
-                    </Link>
+                    </div>
 
                     {/* Info */}
                     <div className="p-4">
