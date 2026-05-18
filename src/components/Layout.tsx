@@ -15,8 +15,9 @@ import {
   Camera,
   Play,
   ArrowRight,
+  Heart,
 } from 'lucide-react';
-import { useCart } from '../store';
+import { useCart, useWishlist } from '../store';
 import { searchProducts, type Product } from '../data';
 
 /* ============================================================
@@ -29,6 +30,7 @@ function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const { totalItems } = useCart();
+  const { totalWishlistItems } = useWishlist();
   const location = useLocation();
 
   /* Track scroll for header bg */
@@ -124,6 +126,19 @@ function Navbar() {
               >
                 <Search size={18} />
               </button>
+
+              <Link
+                to="/wishlist"
+                className="relative p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+                aria-label="Wishlist"
+              >
+                <Heart size={18} />
+                {totalWishlistItems > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-[10px] flex items-center justify-center font-bold text-white">
+                    {totalWishlistItems}
+                  </span>
+                )}
+              </Link>
 
               <Link
                 to="/cart"
@@ -293,20 +308,36 @@ function Navbar() {
               <div className="px-6 pb-8 space-y-4">
                 <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-                {/* Cart button — full width */}
-                <Link
-                  to="/cart"
-                  onClick={closeMobileMenu}
-                  className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl glass text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all"
-                >
-                  <ShoppingCart size={16} />
-                  <span>Cart</span>
-                  {totalItems > 0 && (
-                    <span className="w-5 h-5 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 text-[10px] flex items-center justify-center font-bold">
-                      {totalItems}
-                    </span>
-                  )}
-                </Link>
+                {/* Wishlist & Cart buttons */}
+                <div className="flex gap-3">
+                  <Link
+                    to="/wishlist"
+                    onClick={closeMobileMenu}
+                    className="flex-1 flex items-center justify-center gap-2.5 py-3.5 rounded-xl glass text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all"
+                  >
+                    <Heart size={16} />
+                    <span>Wishlist</span>
+                    {totalWishlistItems > 0 && (
+                      <span className="w-5 h-5 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-[10px] flex items-center justify-center font-bold">
+                        {totalWishlistItems}
+                      </span>
+                    )}
+                  </Link>
+
+                  <Link
+                    to="/cart"
+                    onClick={closeMobileMenu}
+                    className="flex-1 flex items-center justify-center gap-2.5 py-3.5 rounded-xl glass text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all"
+                  >
+                    <ShoppingCart size={16} />
+                    <span>Cart</span>
+                    {totalItems > 0 && (
+                      <span className="w-5 h-5 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 text-[10px] flex items-center justify-center font-bold">
+                        {totalItems}
+                      </span>
+                    )}
+                  </Link>
+                </div>
 
                 <p className="text-center text-[11px] text-slate-600 tracking-wider uppercase">
                   Next-gen tech, delivered with style

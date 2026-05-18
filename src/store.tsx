@@ -95,3 +95,77 @@ export function useCart() {
   if (!ctx) throw new Error('useCart must be used within CartProvider');
   return ctx;
 }
+
+/* ============================================================
+   WISHLIST CONTEXT
+   ============================================================ */
+interface WishlistContextType {
+  wishlistItems: number[];
+  addToWishlist: (productId: number) => void;
+  removeFromWishlist: (productId: number) => void;
+  toggleWishlist: (productId: number) => void;
+  isInWishlist: (productId: number) => boolean;
+  clearWishlist: () => void;
+  totalWishlistItems: number;
+}
+
+const WishlistContext = createContext<WishlistContextType | null>(null);
+const WISHLIST_KEY = 'vstore-wishlist';
+
+function isValidWishlistItem(item: unknown): item is number {
+  return typeof item === 'number' && item > 0;
+}
+
+export function WishlistProvider({ children }: { children: ReactNode }) {
+  const [wishlistItems, setWishlistItems] = useState<number[]>(() => 
+    safeLoad<number>(WISHLIST_KEY).filter(isValidWishlistItem)
+  );
+
+  useEffect(() => { safeSave(WISHLIST_KEY, wishlistItems); }, [wishlistItems]);
+
+  const addToWishlist = (productId: number) => {
+    setWishlistItems(prev => {
+      if (prev.includes(productId)) return prev;
+      return [...prev, productId];
+    });
+  };
+
+  const removeFromWishlist = (productId: number) => {
+    setWishlistItems(prev => prev.filter(id => id !== productId));
+  };
+
+  const toggleWishlist = (productId: number) => {
+    setWishlistItems(prev => {
+      if (prev.includes(productId)) {
+        return prev.filter(id => id !== productId);
+      }
+      return [...prev, productId];
+    });
+  };
+
+  const isInWishlist = (productId: number) => wishlistItems.includes(productId);
+
+  const clearWishlist = () => setWishlistItems([]);
+
+  const totalWishlistItems = wishlistItems.length;
+
+  return (
+    <WishlistContext.Provider value={{ 
+      wishlistItems, 
+      addToWishlist, 
+      removeFromWishlist, 
+      toggleWishlist, 
+      isInWishlist, 
+      clearWishlist,
+      totalWishlistItems 
+    }}>
+      {children}
+    </WishlistContext.Provider>
+  );
+}
+
+export function useWishlist() {
+  const ctx = useContext(WishlistContext);
+  if (!ctx) throw new Error('useWishlist must be used within WishlistProvider');
+  return ctx;
+}

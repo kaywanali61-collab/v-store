@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import { CartProvider } from './store';
+import { CartProvider, WishlistProvider } from './store';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Layout from './components/Layout';
 import Home from './pages/Home';
@@ -10,12 +10,14 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import Cart from './pages/Cart';
+import Wishlist from './pages/Wishlist';
 
 export default function App() {
   return (
     <ErrorBoundary>
       <HashRouter>
         <CartProvider>
+          <WishlistProvider>
           <Routes>
             <Route element={<Layout />}>
               <Route index element={<Home />} />
@@ -26,8 +28,10 @@ export default function App() {
               <Route path="contact" element={<Contact />} />
               <Route path="faq" element={<FAQ />} />
               <Route path="cart" element={<Cart />} />
+              <Route path="wishlist" element={<Wishlist />} />
             </Route>
           </Routes>
+        </WishlistProvider>
         </CartProvider>
       </HashRouter>
     </ErrorBoundary>

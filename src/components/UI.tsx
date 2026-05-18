@@ -1,8 +1,8 @@
 import { type ReactNode, useState, useEffect, useRef, Component, type ErrorInfo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { ShoppingCart, Star, Minus, Plus } from 'lucide-react';
-import { useCart } from '../store';
+import { ShoppingCart, Star, Minus, Plus, Heart } from 'lucide-react';
+import { useCart, useWishlist } from '../store';
 import type { Product } from '../data';
 
 /* ============================================================
@@ -197,6 +197,8 @@ function ProductCardInner({ product }: { product: Product }) {
       : 0;
 
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const inWishlist = isInWishlist(id);
 
   return (
     <motion.div
@@ -232,6 +234,25 @@ function ProductCardInner({ product }: { product: Product }) {
               -{discount}%
             </span>
           )}
+
+          {/* Wishlist Heart Button */}
+          <motion.button
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleWishlist(id);
+            }}
+            className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 ${
+              inWishlist 
+                ? 'bg-red-500/90 text-white shadow-lg shadow-red-500/30' 
+                : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white opacity-0 group-hover:opacity-100'
+            } ${discount > 0 ? 'top-12' : 'top-3'}`}
+            aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+          >
+            <Heart size={14} className={inWishlist ? 'fill-current' : ''} />
+          </motion.button>
         </Link>
 
         {/* Info */}
